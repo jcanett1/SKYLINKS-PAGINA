@@ -15,6 +15,11 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    # 1. Agregamos el entorno obligatorio para deploy-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # Actualizado para evitar la advertencia de deprecación
           cache: 'npm'
 
       - name: Install dependencies
@@ -41,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Si tu carpeta de salida es 'build' en vez de 'dist', cámbialo aquí
+          path: './dist' # Si tu carpeta de salida se llama 'build', cámbialo aquí
 
       - name: Deploy to GitHub Pages
         id: deployment
