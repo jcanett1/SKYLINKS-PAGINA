@@ -250,8 +250,8 @@ export async function generateOrder(order: CartOrder): Promise<unknown> {
 }
 
 
-
-  // 2) Fallback: API pública gratuita con CORS (USD -> MXN)
+export async function getExchangeRate(): Promise<{ normal: string; un_dia?: string }> {
+  // 1) API pública gratuita con CORS (USD -> MXN)
   try {
     const res = await fetch('https://open.er-api.com/v6/latest/USD');
     if (res.ok) {
@@ -260,5 +260,9 @@ export async function generateOrder(order: CartOrder): Promise<unknown> {
       if (mxn) return { normal: Number(mxn).toFixed(2) };
     }
   } catch (_e) {
-    // ignorar
+    // ignorar error de red
   }
+
+  // 2) Último recurso si falla la API
+  return { normal: '17.50' };
+}
