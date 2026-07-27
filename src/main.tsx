@@ -16,7 +16,7 @@ import CartSidebar from './components/CartSidebar';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <CartProvider>
         <Routes>
           <Route path="/" element={<App />} />

@@ -22,6 +22,7 @@ import {
 } from '@phosphor-icons/react';
 import { submitContactForm } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
+import Navbar from '../components/Navbar';
 
 /* ---------- Design tokens ---------- */
 const INK = '#050505';
@@ -273,36 +274,35 @@ export default function CyberSecurity() {
   };
 
   return (
-    <div className="relative min-h-screen bg-ink text-paper font-body overflow-x-hidden" data-testid="cyber-page">
+    <div className="relative min-h-screen bg-ink text-paper font-body overflow-x-hidden pb-14" data-testid="cyber-page">
       <Toaster position="top-center" />
 
       {/* Global noise overlay */}
       <div className="fixed inset-0 noise-overlay pointer-events-none z-[1]" data-testid="noise" />
 
-      {/* ═══════════════ HEADER ═══════════════ */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'backdrop-blur-xl bg-ink/70 border-b' : 'bg-transparent'}`}
-        style={{ borderColor: scrolled ? LINE : 'transparent' }}
-        data-testid="header"
+      {/* ═══════════════ NAVBAR PRINCIPAL DEL SITIO ═══════════════ */}
+      <Navbar />
+
+      {/* ═══════════════ MENU DE LA PAGINA (abajo) ═══════════════ */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl bg-ink/80 border-t"
+        style={{ borderColor: LINE }}
+        data-testid="cyber-bottom-nav"
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
-          <a href="#" className="flex items-center gap-2 font-display font-extrabold text-lg" data-testid="logo">
-            <Shield size={22} weight="duotone" style={{ color: CYAN }} />
-            <span>Skylink<span style={{ color: CYAN }}>.</span>Sonora</span>
-          </a>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-muted">
-            <a href="#servicios" className="hover:text-paper transition-colors">{t.nav.services}</a>
-            <a href="#twofa" className="hover:text-paper transition-colors">{t.nav.twoFA}</a>
-            <a href="#proceso" className="hover:text-paper transition-colors">{t.nav.process}</a>
-            <a href="#faq" className="hover:text-paper transition-colors">{t.nav.faq}</a>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-14 flex items-center justify-between gap-3">
+          <nav className="flex items-center gap-4 sm:gap-7 text-xs sm:text-sm text-muted overflow-x-auto">
+            <a href="#servicios" className="whitespace-nowrap hover:text-paper transition-colors">{t.nav.services}</a>
+            <a href="#twofa" className="whitespace-nowrap hover:text-paper transition-colors">{t.nav.twoFA}</a>
+            <a href="#proceso" className="whitespace-nowrap hover:text-paper transition-colors">{t.nav.process}</a>
+            <a href="#faq" className="whitespace-nowrap hover:text-paper transition-colors">{t.nav.faq}</a>
           </nav>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="flex items-center text-xs font-mono border rounded-full overflow-hidden" style={{ borderColor: LINE }} data-testid="lang-toggle">
               {(['ES', 'EN'] as Lang[]).map((l) => (
                 <button
                   key={l}
                   onClick={() => setLang(l)}
-                  className={`px-3 py-1.5 font-medium transition-colors ${lang === l ? 'text-ink' : 'text-muted hover:text-paper'}`}
+                  className={`px-2.5 py-1 font-medium transition-colors ${lang === l ? 'text-ink' : 'text-muted hover:text-paper'}`}
                   style={lang === l ? { background: CYAN } : {}}
                   data-testid={`lang-${l}`}
                 >{l}</button>
@@ -319,7 +319,7 @@ export default function CyberSecurity() {
             </a>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* ═══════════════ HERO ═══════════════ */}
       <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden" data-testid="hero">
