@@ -250,8 +250,29 @@ export async function generateOrder(order: CartOrder): Promise<unknown> {
 }
 
 export async function getExchangeRate(): Promise<{ normal: string; un_dia?: string }> {
-  const res = await fetch(`${SYSCOM_API_URL}/tipocambio`, { headers });
-  if (!res.ok) throw new Error('Error fetching exchange rate');
-  const data = await res.json();
-  return data;
+  // 1) Intentar vía Edge Function de Supabase (si está desplegada y sin bloqueo CORS)
+  try {
+    const res = await fetch(`${SYSCOM_API_URL}/tipocambio`, { headers });
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.normal) return data;
+    }
+  } catch (_e) {
+    // ignorar y usar fallback público
+  }
+
+  // 2) Fallback: API pública gratuita con CORS (USD -> MXN)
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    if (res.ok) {
+      const data = await res.json();
+      const mxn = data?.rates?.MXN;
+      if (mxn) return { normal: Number(mxn).toFixed(2) };
+    }
+  } catch (_e) {
+    // ignorar
+  }
+
+  // 3) Último recurso
+  return { normal: '17.50' };
 }
