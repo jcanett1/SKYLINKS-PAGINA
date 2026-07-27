@@ -249,17 +249,7 @@ export async function generateOrder(order: CartOrder): Promise<unknown> {
   return data;
 }
 
-export async function getExchangeRate(): Promise<{ normal: string; un_dia?: string }> {
-  // 1) Intentar vía Edge Function de Supabase (si está desplegada y sin bloqueo CORS)
-  try {
-    const res = await fetch(`${SYSCOM_API_URL}/tipocambio`, { headers });
-    if (res.ok) {
-      const data = await res.json();
-      if (data?.normal) return data;
-    }
-  } catch (_e) {
-    // ignorar y usar fallback público
-  }
+
 
   // 2) Fallback: API pública gratuita con CORS (USD -> MXN)
   try {
@@ -272,7 +262,3 @@ export async function getExchangeRate(): Promise<{ normal: string; un_dia?: stri
   } catch (_e) {
     // ignorar
   }
-
-  // 3) Último recurso
-  return { normal: '17.50' };
-}
